@@ -2,18 +2,30 @@ package com.paymybuddy.webapp.service;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.repository.UserProxy;
 
-@Service
+@Service("userService")
 public class UserService {
 
+    private static final Logger logger = LogManager.getLogger("UserServiceImpl");
+    
     @Autowired
     private UserProxy userProxy;
 
+	/*
+	 * @Override public User findByUsernameOrEmail(String usernameOrEmail) { User
+	 * user = null; try { user = userProxy.findByUsernameOrEmail(usernameOrEmail); }
+	 * catch (Exception e) { throw e; } logger.info("UserServiceImpl ok."); return
+	 * user; }
+	 */
+	
     public ArrayList<User> getUsers() {
         return userProxy.getUsers();
     }
@@ -41,5 +53,4 @@ public class UserService {
 		
 		return savedUser;
 	}
-
 }

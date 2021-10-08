@@ -2,8 +2,9 @@ package com.paymybuddy.webapp.model;
 
 import java.util.Objects;
 
+
 public class Connection {
-	
+
 	private int id;
 	
 	private int userId;
@@ -56,32 +57,5 @@ public class Connection {
 	public void setConnectionUsername(String connectionUsername) {
 		this.connectionUsername = connectionUsername;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(connectionUsername, connectionEmail, connectionId, id, userId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Connection other = (Connection) obj;
-		return Objects.equals(connectionUsername, other.connectionUsername)
-				&& Objects.equals(connectionEmail, other.connectionEmail) && connectionId == other.connectionId
-				&& id == other.id && userId == other.userId;
-	}
-
-	@Override
-	public String toString() {
-		return "Connection [id=" + id + ", userId=" + userId + ", connectionId=" + connectionId + ", connectionEmail="
-				+ connectionEmail + ", connectionUsername=" + connectionUsername + "]";
-	}
-	
-	
 
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+<title>Pay My Buddy - Login</title>
+</head>
+<body>
+    <div class="container-fluid text-center">
+        <div>
+            <div class="p-3 mb-2 bg-success text-white rounded-lg">Pay My
+                Buddy</div>
+
+        </div>
+        <form method="post" th:action="@{/login}"
+            style="max-width: 350px; margin: 0 auto;">
+
+            <div th:if="${param.logout}">
+                <p class="text-warning">You have been logged out.</p>
+            </div>
+            <br />
+            <div align="center" th:if="${param.error}">
+                <p style="font-size: 20; color: #FF1C19;">Username or password
+                    is invalid</p>
+            </div>
+
+            <div class="border border-secondary p-3 rounded">
+                <p>Access to Pay My Buddy application</p>
+                <p>
+                    <input type="email" name="username"
+                        placeholder="Email" class="form-control" required autofocus/>
+                </p>
+                <p>
+                    <input type="password" placeholder="Password"
+                        name="password" class="form-control" required autofocus/>
+                </p>
+                <p>
+                    <input type="checkbox" name="remember-me" />&nbsp;Remember Me
+                </p>
+                <p>
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </p>
+                <p>
+                <a th:href="@{/registerNewUser}">Create an account</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

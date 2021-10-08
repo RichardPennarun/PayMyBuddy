@@ -25,9 +25,6 @@ public class AccountService {
 	public Account saveAccount(Account Account) {
 		Account savedAccount;
 		
-		// Functional rule : Last name must be capitalized.
-		//Account.setLastName(Account.getLastName());
-
 		if(Account.getId() == 0) {
 			// If id is null, then it is a new Account.
 			savedAccount = accountProxy.createAccount(Account);

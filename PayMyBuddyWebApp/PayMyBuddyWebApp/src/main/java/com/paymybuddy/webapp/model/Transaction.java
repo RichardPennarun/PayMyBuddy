@@ -3,17 +3,20 @@ package com.paymybuddy.webapp.model;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+
 public class Transaction {
-	
+
 	private int id;
-	
+
 	private Timestamp transactionDate;
-	
+
 	private int transmitterId;
-	
+
 	private int beneficiaryId;
+
+	private String beneficiaryUsername;
 	
-	private Float amount;
+	private double amount;
 	
 	private String description;
 	
@@ -52,11 +55,19 @@ public class Transaction {
 		this.beneficiaryId = beneficiaryId;
 	}
 	
-	public Float getAmount() {
+	public String getBeneficiaryUsername() {
+		return beneficiaryUsername;
+	}
+	
+	public void setBeneficiaryUsername(String beneficiaryUsername) {
+		this.beneficiaryUsername = beneficiaryUsername;
+	}
+	
+	public double getAmount() {
 		return amount;
 	}
 	
-	public void setAmount(Float amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	
@@ -67,16 +78,5 @@ public class Transaction {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return super.equals(obj);
-	}
-	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
+
 }

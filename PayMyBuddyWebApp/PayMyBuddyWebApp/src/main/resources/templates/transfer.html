@@ -4,8 +4,8 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -14,10 +14,11 @@
 
 
 
-<title>Pay My Buddy</title>
+<title>Pay My Buddy - Transfer</title>
 
 <style>
 .container {
+	padding-top: 10px;
 }
 
 body {
@@ -44,51 +45,65 @@ h4 {
 
 
 
-<header>
-	<nav class="navbar navbar-expand navbar-inverse navbar-fixed-top">
-		<div class="row">
-		<div class="col-2">
-		</div><div class="p-3 mb-2 bg-success text-white rounded-lg">Pay My Buddy</div>
-</div><div class="col"></div>
-		<div class="col-7">
-		<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link" href="home.html">Home</a>
-			</li>
-			<li class="nav-item active"><a class="nav-link"
-				th:href="@{/transfer}">Transfer</a></li>
-			<li class="nav-item"><a class="nav-link" th:href="@{/connections}">Connections</a>
-			</li>
-			<li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-			<li class="nav-item"><a class="nav-link" href="#">Log off</a></li>
-		</ul></div>
-		
-	</nav>
+	<header>
+		<nav class="navbar navbar-expand navbar-inverse navbar-fixed-top">
+			<div class="row">
+				<div class="col-2"></div>
+				<div class="p-3 mb-2 bg-success text-white rounded-lg">Pay My
+					Buddy</div>
+			</div>
+			<div class="col-2"></div>
+			<div class="col-5">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link" th:href="@{/home}">Home</a>
+					</li>
+					<li class="nav-item active"><a class="nav-link">Transfer</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/connections}">Connections</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/profile}">Profile</a></li>
+				</ul>
+			</div>
+			<div class="col-3">
+				<a th:href="@{/logout}">
+					<button type="button">LOGOUT</button>
+				</a>
+			</div>
+		</nav>
 
 
-<div class="p-3 mb-2 bg-light text-dark">Home / Transfer</div>
+		<div class="p-3 mb-2 bg-light text-dark">Home / Transfer</div>
 
-</header>
+	</header>
 
-<p>
-<p>
-	<div class="container bg-grey">
+	<p>
+	<p>
+	<p>
+	<p>
+	<div class="container special bg-grey">
 		<div class="row">
 			<div class="col-3">
 				<h4 class="h4">Send Money</h4>
 			</div>
 			<div class="col-6"></div>
 			<div class="col-3">
-				<button type="button" th:href="@{/connections}"
-					class="btn btn-primary">Add Connection</button>
+				<a class="btn btn-primary" href="/connections" role="button">Add
+					Connection</a>
 			</div>
 		</div>
+
 	</div>
 
-	<div class="container special bg-light">
+
+	<div class="container bg-light">
 
 		<form method="post" th:action="@{/saveTransaction}"
 			th:object="${transaction}">
-
+			<div class="row">
+				<div class="col-1"></div>
+				<p>
+					Your account balance: <span th:each="account : ${accounts}"
+						th:text="${account.balance}"> Amount </span>€
+			</div>
 
 			<div class="row">
 				<div class="col-1"></div>
@@ -104,33 +119,35 @@ h4 {
 				</div>
 				<div class="col-2">
 					<div class="form-group">
-						<input type="number" name="howmuch" th:field="*{amount}"
+						<input type="text" th:field="*{amount}"
 							class="form-control" id="amountInput"
 							aria-describedby="amountHelp" placeholder="0€">
 					</div>
 				</div>
-				<div class="col-2">
+				<div class="col-4">
 					<div class="form-group">
 						<input type="text" th:field="*{description}" class="form-control"
 							id="descriptionInput" aria-describedby="descriptionHelp"
 							placeholder="Description">
 					</div>
 				</div>
-				<div class="col-2">
+				<div class="col-1">
 					<button type="submit" class="btn btn-success btn-lg">Pay</button>
 				</div>
-				<div class="col-2"></div>
+				<div class="col-1"></div>
 			</div>
 		</form>
-		<!-- <td>
-							<a th:href="@{/updateUser/{id}(id=${user.id})}">
-								<button class="btn btn-primary">Add connection</button></a>						
-						</td> -->
 
 	</div>
 
 
-	<h2 class="h2">My transactions</h2>
+	<div class="container special bg-grey">
+		<div class="row">
+			<div class="col-6">
+				<h4 class="h4">My transactions</h4>
+			</div>
+		</div>
+	</div>
 
 	<div class="container">
 
@@ -139,8 +156,7 @@ h4 {
 				<thead class="p-3 mb-2 bg-success text-white">
 					<tr>
 						<th>Date</th>
-						<th>User / Supprimer</th>
-						<th>Connection / Remplacer par connectionUsername</th>
+						<th>Username</th>
 						<th>Decscription</th>
 						<th>Amount</th>
 					</tr>
@@ -149,29 +165,16 @@ h4 {
 					<tr th:each="transaction: ${transactions}">
 						<td><span th:text="${transaction.transactionDate}">
 								Date </span></td>
-						<td><span th:text="${transaction.transmitterId}"> User
-						</span></td>
-						<td><span th:text="${transaction.beneficiaryId}">
+						<td><span th:text="${transaction.beneficiaryUsername}">
 								Connection </span></td>
 						<td><span th:text="${transaction.description}">
 								Description </span></td>
-						<td><span th:text="${transaction.amount}"> Password </span></td>
+						<td><span th:text="${transaction.amount}"> Amount </span></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 
-
-		<!-- 
-		<h4><a th:href="@{/createUser}">Add a user</a></h4> 
-		-->
-
-	</div>
-
-
-	<!-- 
-		<h4><a th:href="@{/createUser}">Add a user</a></h4> 
-		-->
 
 	</div>
 

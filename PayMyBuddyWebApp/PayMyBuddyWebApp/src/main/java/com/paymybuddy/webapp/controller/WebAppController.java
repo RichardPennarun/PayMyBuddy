@@ -1,130 +1,98 @@
 package com.paymybuddy.webapp.controller;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
-import javax.annotation.security.RolesAllowed;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.paymybuddy.webapp.model.Connection;
-import com.paymybuddy.webapp.model.Transaction;
+import com.paymybuddy.webapp.model.Account;
+import com.paymybuddy.webapp.model.BankAccount;
 import com.paymybuddy.webapp.model.User;
-import com.paymybuddy.webapp.service.ConnectionService;
-import com.paymybuddy.webapp.service.TransactionService;
+import com.paymybuddy.webapp.service.AccountService;
+import com.paymybuddy.webapp.service.BankAccountService;
 import com.paymybuddy.webapp.service.UserService;
 
 @Controller
 public class WebAppController {
 
-	@Autowired
-	UserService userService;
+	private static final Logger logger = LogManager.getLogger("WebAppController");
 
 	@Autowired
-	TransactionService transactionService;
-
-	@Autowired
-	ConnectionService connectionService;
-
-	@RolesAllowed("USER")
-	@RequestMapping("/*")
-	public String getUser() {
-		return "home";
-	}
-
-	@RolesAllowed({ "USER", "ADMIN" })
-	@RequestMapping("/admin")
-	public String getAdmin() {
-		return "home";
-	}
+	private UserService userService;
 	
-		
+	@Autowired
+	private BankAccountService bankAccountService;
+	
+	@Autowired
+	private AccountService accountService;
+	
+	
 
-	@GetMapping("/transfer")
-	public String transfer(Model model) {
-		
-		User user = userService.getUser(2);
-		
-		Iterable<Transaction> listTransaction = user.getTransactions();
-		model.addAttribute("transactions", listTransaction);
+	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
+	public String home(Model model) {
 
-		Iterable<Connection> listConnection = connectionService.getConnections();
-		model.addAttribute("connections", listConnection);
-		
-		Transaction e = new Transaction();
-		model.addAttribute("transaction", e);
-		return "transfer";
+		Iterable<User> listUser = userService.getUsers();
+		// Integer userId = ((User) loggedUser).getId();
+		// User user = userService.getUser(userId);
+		model.addAttribute("users", listUser);
+		logger.info("Home.");
+		return "home";
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String loginPage(Model model) {
+		logger.info("Page login.");
+
+		return "login";
+	}
+
+	@RequestMapping(value = { "/register" }, method = RequestMethod.GET)
+	public String register(Model model) {
+
+		return "register";
 	}
 
 	/*
-	 * @GetMapping("/createTransaction") public String createTransaction(Model
-	 * model) { Transaction e = new Transaction(); model.addAttribute("transaction",
-	 * e); return "transfer"; }
+	 * New user
 	 */
 
-	@PostMapping("/saveTransaction")
-	public ModelAndView saveTransaction(@ModelAttribute Transaction transaction) {
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		transaction.setTransactionDate(timestamp);
-		transaction.setTransmitterId(2);
-		transactionService.saveTransaction(transaction);
-		return new ModelAndView("redirect:/transfer");
+	@GetMapping("/registerNewUser")
+	public String createUser(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
+		
+		return "registerNewUser";
 	}
 
-	@GetMapping("/connections")
-	public String createConnection(Model model) {
+	@PostMapping("/registerUser")
+	public ModelAndView saveUser(
+			@ModelAttribute ("user") User user,
+			@ModelAttribute ("iban") String iban) {
+		
+		// Cryptage du password
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(hashedPassword);
 
-		Iterable<Connection> listConnection = connectionService.getConnections();
-		model.addAttribute("connections", listConnection);
-
-		Connection e = new Connection();
-		model.addAttribute("connection", e);
-		return "connections";
+		userService.saveUser(user);
+		
+		// Création du bankAccount
+		BankAccount bankAccount = new BankAccount();
+		bankAccount.setUserId(user.getId());
+		bankAccount.setIban(iban);
+		
+		bankAccountService.saveBankAccount(bankAccount);
+		//accountService.saveAccount(account);
+		return new ModelAndView("redirect:/");
 	}
 
-	@PostMapping("/saveConnection")
-	public ModelAndView saveConnection(@ModelAttribute Connection connection) {
-		connection.setUserId(2);
-		ArrayList<User> listUser = (ArrayList<User>) 
-				userService.getUsers();
-		for (User user : listUser) {
-			if (user.getEmail().equals(connection.getConnectionEmail())) {
-				connection.setConnectionId(user.getId());
-				connection.setConnectionUsername(user.getUsername());
-			}
-		}
-		connectionService.saveConnection(connection);
-		return new ModelAndView("redirect:/connections");
-	}
-
-	/*
-	 * @GetMapping("/users") public String home(Model model) { ArrayList<User> users
-	 * = userService.getUsers(); model.addAttribute("users", users); return "home";
-	 * }
-	 */
-
-	/*
-	 * @GetMapping("/createUser") public String createUser(Model model) { User e =
-	 * new User(); model.addAttribute("user", e); return "formNewUser"; }
-	 * 
-	 * @PostMapping("/saveUser") public ModelAndView saveUser(@ModelAttribute User
-	 * user) { if (user.getId() != 0) { } userService.saveUser(user); return new
-	 * ModelAndView("redirect:/"); }
-	 * 
-	 * @GetMapping("/updateUser/{id}") public String updateUser(@PathVariable("id")
-	 * final int id, Model model) { User e = userService.getUser(id);
-	 * model.addAttribute("user", e); return "formUpdateUser"; }
-	 * 
-	 * @GetMapping("/deleteUser/{id}") public ModelAndView
-	 * deleteUser(@PathVariable("id") final int id) { userService.deleteUser(id);
-	 * return new ModelAndView("redirect:/"); }
-	 */
 
 }

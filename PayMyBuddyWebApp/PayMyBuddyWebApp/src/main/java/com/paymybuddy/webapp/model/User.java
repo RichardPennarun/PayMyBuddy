@@ -1,11 +1,16 @@
 package com.paymybuddy.webapp.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.stereotype.Component;
 
-public class User {
+@Component
+public class User  implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
 	private int id;
 
@@ -18,12 +23,31 @@ public class User {
 	private String email;
 
 	private String password;
-	
-	List<Transaction> transactions = new ArrayList<>();
-	
-	List<Connection> connections = new ArrayList<>();
+
+	private Account account;
+
+	private BankAccount bankAccount;
+
+	private List<Transaction> transactions = new ArrayList<>();
+
+	private List<Connection> connections = new ArrayList<>();
 
 	public User() {
+	}
+
+	public User(int id, String firstName, String lastName, String username, String email, String password,
+			Account account, BankAccount bankAccount, List<Transaction> transactions, List<Connection> connections) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.account = account;
+		this.bankAccount = bankAccount;
+		this.transactions = transactions;
+		this.connections = connections;
 	}
 
 	public int getId() {
@@ -74,6 +98,22 @@ public class User {
 		this.password = password;
 	}
 
+	public BankAccount getBankAccount() {
+		return bankAccount;
+	}
+
+	public void setBankAccount(BankAccount bankAccount) {
+		this.bankAccount = bankAccount;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -91,18 +131,6 @@ public class User {
 	}
 
 	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", email=" + email + ", password=" + password + ", transactions=" + transactions + ", connections="
-				+ connections + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(connections, email, firstName, id, lastName, password, transactions, username);
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -111,12 +139,13 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		return Objects.equals(connections, other.connections) && Objects.equals(email, other.email)
-				&& Objects.equals(firstName, other.firstName) && id == other.id
+		return Objects.equals(account, other.account) && Objects.equals(connections, other.connections)
+				&& Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName) && id == other.id
 				&& Objects.equals(lastName, other.lastName) && Objects.equals(password, other.password)
-				&& Objects.equals(transactions, other.transactions) && Objects.equals(username, other.username);
+				&& Objects.equals(transactions, other.transactions) && Objects.equals(username, other.username)
+				&& Objects.equals(bankAccount, other.bankAccount);
 	}
-	
+
 	
 
 }
