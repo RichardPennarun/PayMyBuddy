@@ -21,6 +21,17 @@ public class AccountController {
 	@Autowired
 	AccountService accountService;
 
+	// - Get one account
+	@GetMapping("/account/{id}")
+	public Account getAccount(@PathVariable("id") final Integer id) {
+		Optional<Account> account = accountService.getAccount(id);
+		if (account.isPresent()) {
+			return account.get();
+		} else {
+			return null;
+		}
+	}
+
 	// Get all accounts, returns a list of all accounts
 	@GetMapping("/accounts")
 	public ArrayList<Account> getAccounts() {
@@ -28,40 +39,21 @@ public class AccountController {
 		return accounts;
 
 	}
-	
+
 	// Create - Add a new account
 	@PostMapping("/account")
 	public Account createAccount(@RequestBody Account account) {
 		return accountService.saveAccount(account);
 	}
-	
-	
-	//- Get one account 
-	@GetMapping("/account/{id}")
-	public Account getAccount(@PathVariable("id") final Integer id) {
-		Optional<Account> account = accountService.getAccount(id);
-		if(account.isPresent()) {
-			return account.get();
-		} else {
-			return null;
-		}
-	}
-	
-	//Update an existing account
+
+	// Update an existing account
 	@PutMapping("/account/{id}")
-	public Account updateAccount(@PathVariable("id") final Integer id, @RequestBody Account account) {
-		Optional<Account> e = accountService.getAccount(id);
-		if(e.isPresent()) {
-			Account currentAccount = e.get();
-			
-			Integer userId = account.getUserId();
-			if(userId != null) {
-				currentAccount.setUserId(userId);
-			}
-			Float balance = account.getBalance();
-			if(balance != null) {
-				currentAccount.setBalance(balance);
-			}
+	public Account updateAccount(@PathVariable("id") final Integer id, 
+			@RequestBody Account account) {
+		Optional<Account> a = accountService.getAccount(id);
+		if (a.isPresent()) {
+			Account currentAccount = a.get();
+			currentAccount.setBalance(account.getBalance());
 			accountService.saveAccount(currentAccount);
 			return currentAccount;
 		} else {

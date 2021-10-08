@@ -20,9 +20,16 @@ public class Account {
 	@Column(name = "account_user_id")
 	private int userId;
 
-	private Float balance;
+	private double balance;
 	
 	public Account() {
+	}
+	
+	public Account(int id, int userId, double balance) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.balance = balance;
 	}
 	
 	public int getId() {
@@ -41,11 +48,11 @@ public class Account {
 		this.userId = userId;
 	}
 	
-	public Float getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	
-	public void setBalance(Float balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 

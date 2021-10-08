@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -37,6 +38,18 @@ public class User {
 	private String email;
 
 	private String password;
+	
+	@OneToOne(
+			cascade = CascadeType.ALL, 
+			orphanRemoval = false)
+	@JoinColumn(name = "id", referencedColumnName = "account_user_id")
+	private Account account;
+	
+	@OneToOne(
+			cascade = CascadeType.ALL, 
+			orphanRemoval = false)
+	@JoinColumn(name = "id", referencedColumnName = "bank_account_user_id")
+	private BankAccount bankAccount;
 
 	@OneToMany(
 			cascade = CascadeType.ALL, 
@@ -50,11 +63,24 @@ public class User {
 			orphanRemoval = false) 
 	@JoinColumn(name = "user_id")
 	private List<Connection> connections = new ArrayList<>();
-	
-	
-	
+
 
 	public User() {
+	}
+	
+	public User(int id, String firstName, String lastName, String username, String email, String password,
+			Account account, BankAccount bankAccount, List<Transaction> transactions, List<Connection> connections) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.account = account;
+		this.bankAccount = bankAccount;
+		this.transactions = transactions;
+		this.connections = connections;
 	}
 
 	public int getId() {
@@ -104,6 +130,22 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public BankAccount getBankAccount() {
+		return bankAccount;
+	}
+	
+	public void setBankAccount(BankAccount bankAccount) {
+		this.bankAccount = bankAccount;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 
 	public List<Transaction> getTransactions() {
 		return transactions;
@@ -113,15 +155,17 @@ public class User {
 		this.transactions = transactions;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", email=" + email + ", password=" + password + ", transactions=" + transactions + "]";
+	public List<Connection> getConnections() {
+		return connections;
+	}
+
+	public void setConnections(List<Connection> connections) {
+		this.connections = connections;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, firstName, id, lastName, password, transactions, username);
+		return Objects.hash(account, bankAccount, connections, email, firstName, id, lastName, password, transactions, username);
 	}
 
 	@Override
@@ -133,10 +177,14 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		return Objects.equals(email, other.email)
-				&& Objects.equals(firstName, other.firstName) && id == other.id
+		return Objects.equals(account, other.account) && Objects.equals(connections, other.connections)
+				&& Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName) && id == other.id
 				&& Objects.equals(lastName, other.lastName) && Objects.equals(password, other.password)
-				&& Objects.equals(transactions, other.transactions) && Objects.equals(username, other.username);
+				&& Objects.equals(transactions, other.transactions) && Objects.equals(username, other.username)
+				&& Objects.equals(bankAccount, other.bankAccount);
 	}
+	
+	
+	
 
 }

@@ -19,7 +19,7 @@ public class Transaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "transaction_date")
+	@Column(name = "date")
 	private Timestamp transactionDate;
 
 	@Column(name = "transmitter_id")
@@ -28,13 +28,32 @@ public class Transaction {
 	@Column(name = "beneficiary_id")
 	private int beneficiaryId;
 
-	private Float amount;
+	@Column(name = "beneficiary_username")
+	private String beneficiaryUsername;
+
+	private double amount;
 
 	private String description;
 	
 
 	public Transaction() {
 	}
+	
+	
+
+	public Transaction(int id, Timestamp transactionDate, int transmitterId, int beneficiaryId,
+			String beneficiaryUsername, double amount, String description) {
+		super();
+		this.id = id;
+		this.transactionDate = transactionDate;
+		this.transmitterId = transmitterId;
+		this.beneficiaryId = beneficiaryId;
+		this.beneficiaryUsername = beneficiaryUsername;
+		this.amount = amount;
+		this.description = description;
+	}
+
+
 
 	public int getId() {
 		return id;
@@ -67,12 +86,20 @@ public class Transaction {
 	public void setBeneficiaryId(int beneficiaryId) {
 		this.beneficiaryId = beneficiaryId;
 	}
+	
+	public String getBeneficiaryUsername() {
+		return beneficiaryUsername;
+	}
+	
+	public void setBeneficiaryUsername(String beneficiaryUsername) {
+		this.beneficiaryUsername = beneficiaryUsername;
+	}
 
-	public Float getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	
@@ -87,30 +114,6 @@ public class Transaction {
 	@Override
 	public int hashCode() {
 		return Objects.hash(amount, beneficiaryId, transactionDate, description, id, transmitterId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Transaction other = (Transaction) obj;
-		return Objects.equals(amount, other.amount) && beneficiaryId == other.beneficiaryId
-				&& Objects.equals(transactionDate, other.transactionDate) && Objects.equals(description, other.description) && id == other.id
-				&& transmitterId == other.transmitterId;
-	}
-
-	@Override
-	public String toString() {
-		return "Transaction [id=" + id + ", date=" + transactionDate + ", transmitterId=" + transmitterId + ", beneficiaryId="
-				+ beneficiaryId + ", amount=" + amount + ", description=" + description + "]";
-	}
-
-	
-
-	
+	}	
 
 }

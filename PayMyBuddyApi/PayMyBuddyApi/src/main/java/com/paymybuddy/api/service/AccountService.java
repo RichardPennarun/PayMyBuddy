@@ -11,16 +11,16 @@ import com.paymybuddy.api.repository.AccountRepository;
 
 @Service
 public class AccountService {
-	
+
 	@Autowired
 	private AccountRepository accountRepository;
-	
+
 	// Get all accounts
 	public ArrayList<Account> getAccounts() {
-        ArrayList<Account> accounts = (ArrayList<Account>) accountRepository.findAll();
-        
-        return accounts;
-    }
+		ArrayList<Account> accounts = (ArrayList<Account>) accountRepository.findAll();
+
+		return accounts;
+	}
 
 	public Optional<Account> getAccount(final Integer id) {
 		return accountRepository.findById(id);
@@ -30,7 +30,5 @@ public class AccountService {
 		Account savedAccount = accountRepository.save(account);
 		return savedAccount;
 	}
-	
-	
 
 }

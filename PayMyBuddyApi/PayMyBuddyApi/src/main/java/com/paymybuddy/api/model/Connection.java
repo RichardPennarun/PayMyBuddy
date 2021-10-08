@@ -32,6 +32,27 @@ public class Connection {
 	
 	public Connection() {
 	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "Connection [id=" + id + ", userId=" + userId + ", connectionId=" + connectionId + ", connectionEmail="
+				+ connectionEmail + ", connectionUsername=" + connectionUsername + "]";
+	}
+
+
+
+	public Connection(int id, int userId, int connectionId, String connectionEmail, String connectionUsername) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.connectionId = connectionId;
+		this.connectionEmail = connectionEmail;
+		this.connectionUsername = connectionUsername;
+	}
+
+
 
 	public int getId() {
 		return id;
@@ -91,15 +112,6 @@ public class Connection {
 				&& Objects.equals(connectionEmail, other.connectionEmail) && connectionId == other.connectionId
 				&& id == other.id && userId == other.userId;
 	}
-
-	@Override
-	public String toString() {
-		return "Connection [id=" + id + ", userId=" + userId + ", connectionId=" + connectionId + ", connectionEmail="
-				+ connectionEmail + ", connectionUsername=" + connectionUsername + "]";
-	}
-	
-	
-	
 	
 	
 }
