@@ -19,15 +19,10 @@ public class TransactionProxy {
     @Autowired
     private CustomProperties props;
 
-    /**
-    * Get all transactions
-    * @return An iterable of all transactions
-    */
-
+    // Get all transactions
     public ArrayList<Transaction> getTransactions() {
         String baseApiUrl = props.getApiUrl();
         String getTransactionsUrl = baseApiUrl + "/transactions";
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ArrayList<Transaction>> response = restTemplate.exchange(
                 getTransactionsUrl,
@@ -35,19 +30,13 @@ public class TransactionProxy {
                 null,
                 new ParameterizedTypeReference<ArrayList<Transaction>>() {}
                 );
-
         return response.getBody();
     }
 	
-	/**
-	 * Get an transaction by the id
-	 * @param id The id of the transaction
-	 * @return The transaction which matches the id
-	 */
+	//Get a transaction by the id
 	public Transaction getTransaction(int id) {
 		String baseApiUrl = props.getApiUrl();
 		String getTransactionUrl = baseApiUrl + "/transaction/" + id;
-
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Transaction> response = restTemplate.exchange(
 				getTransactionUrl, 
@@ -55,17 +44,10 @@ public class TransactionProxy {
 				null,
 				Transaction.class
 			);
-		
-		//log.debug("Get Transaction call " + response.getStatusCode().toString());
-		
 		return response.getBody();
 	}
 	
-	/**
-	 * Add a new transaction 
-	 * @param e A new transaction (without an id)
-	 * @return The transaction full filled (with an id)
-	 */
+	// Add a new transaction 
 	public Transaction createTransaction(Transaction e) {
 		String baseApiUrl = props.getApiUrl();
 		String createTransactionUrl = baseApiUrl + "/transaction";
@@ -77,9 +59,6 @@ public class TransactionProxy {
 				HttpMethod.POST, 
 				request, 
 				Transaction.class);
-		
-		//log.debug("Create Transaction call " + response.getStatusCode().toString());
-		
 		return response.getBody();
 	}
 

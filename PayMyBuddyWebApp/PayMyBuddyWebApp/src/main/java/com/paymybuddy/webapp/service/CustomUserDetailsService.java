@@ -1,7 +1,5 @@
 package com.paymybuddy.webapp.service;
 
-import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,46 +33,25 @@ public class CustomUserDetailsService implements UserDetailsService {
 		return new MyUserDetails(user);
 	}
 	
-	
-
-    /**
-     * Retrieves the logged in user by its id.
-     *
-     * @return the logged in user with the given id.
-     * @throws IllegalArgumentException if id is null.
-     */
+	    // Retrieves the logged in user by its id.
     public Integer getCurrentlyLoggedInUserId() {
         logger.info("The logged in user was successfully fetched.");
         return getAuthentication().getId();
     }
 
-    /**
-     * Retrieves the logged in user by its email.
-     *
-     * @return the logged in user with the given email.
-     * @throws IllegalArgumentException if email is null.
-     */
+    // Retrieves the logged in user by its email.
     public String getCurrentlyLoggedInUserEmail() {
         logger.info("The logged in user was successfully fetched.");
         return getAuthentication().getUsername();
     }
 
-    /**
-     * Retrieves the logged in user.
-     *
-     * @return the logged in user.
-     * @throws IllegalArgumentException if user is null.
-     */
+    // Retrieves the logged in user.
     public User getCurrentlyLoggedInUser() {
         logger.info("The logged in user was successfully fetched.");
         return getAuthentication().getUser();
     }
 
-    /**
-     * Retrieves the currently authenticated principal via a static call to the SecurityContextHolder.
-     *
-     * @return the currently authenticated principal.
-     */
+    // Retrieves the currently authenticated principal via a static call to the SecurityContextHolder.
     private MyUserDetails getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (MyUserDetails) authentication.getPrincipal();

@@ -19,15 +19,10 @@ public class ConnectionProxy {
     @Autowired
     private CustomProperties props;
 
-    /**
-    * Get all connections
-    * @return An iterable of all connections
-    */
-
+    //Get all connections
     public ArrayList<Connection> getConnections() {
         String baseApiUrl = props.getApiUrl();
         String getConnectionsUrl = baseApiUrl + "/connections";
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ArrayList<Connection>> response = restTemplate.exchange(
                 getConnectionsUrl,
@@ -35,19 +30,13 @@ public class ConnectionProxy {
                 null,
                 new ParameterizedTypeReference<ArrayList<Connection>>() {}
                 );
-
         return response.getBody();
     }
 	
-	/**
-	 * Get an connection by the id
-	 * @param id The id of the connection
-	 * @return The connection which matches the id
-	 */
+	// Get a connection by the id
 	public Connection getConnection(int id) {
 		String baseApiUrl = props.getApiUrl();
 		String getConnectionUrl = baseApiUrl + "/connection/" + id;
-
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Connection> response = restTemplate.exchange(
 				getConnectionUrl, 
@@ -55,21 +44,13 @@ public class ConnectionProxy {
 				null,
 				Connection.class
 			);
-		
-		//log.debug("Get Connection call " + response.getStatusCode().toString());
-		
 		return response.getBody();
 	}
 	
-	/**
-	 * Add a new connection 
-	 * @param e A new connection (without an id)
-	 * @return The connection full filled (with an id)
-	 */
+	//Add a new connection 
 	public Connection createConnection(Connection e) {
 		String baseApiUrl = props.getApiUrl();
 		String createConnectionUrl = baseApiUrl + "/connection";
-		
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<Connection> request = new HttpEntity<Connection>(e);
 		ResponseEntity<Connection> response = restTemplate.exchange(
@@ -77,16 +58,10 @@ public class ConnectionProxy {
 				HttpMethod.POST, 
 				request, 
 				Connection.class);
-		
-		//log.debug("Create Connection call " + response.getStatusCode().toString());
-		
 		return response.getBody();
 	}
 	
-	/**
-	 * Update an connection - using the PUT HTTP Method.
-	 * @param e Existing connection to update
-	 */
+	//Update a connection
 	public Connection updateConnection(Connection e) {
 		String baseApiUrl = props.getApiUrl();
 		String updateConnectionUrl = baseApiUrl + "/connection/" + e.getId();
@@ -98,29 +73,19 @@ public class ConnectionProxy {
 				HttpMethod.PUT, 
 				request, 
 				Connection.class);
-		
-		//log.debug("Update Connection call " + response.getStatusCode().toString());
-		
 		return response.getBody();
 	}
 	
-	/**
-	 * Delete an connection using exchange method of RestTemplate
-	 * instead of delete method in order to log the response status code.
-	 * @param e The connection to delete
-	 */
+	//Delete a connection
 	public void deleteConnection(int id) {
 		String baseApiUrl = props.getApiUrl();
 		String deleteConnectionUrl = baseApiUrl + "/connection/" + id;
-		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Void> response = restTemplate.exchange(
 				deleteConnectionUrl, 
 				HttpMethod.DELETE, 
 				null, 
 				Void.class);
-		
-		//log.debug("Delete Connection call " + response.getStatusCode().toString());
 	}
 
 }

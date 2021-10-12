@@ -27,72 +27,87 @@ public class WebAppController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private BankAccountService bankAccountService;
-	
+
 	@Autowired
 	private AccountService accountService;
-	
-	
+
+	/*
+	 * Authentification
+	 */
 
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public String home(Model model) {
-
-		Iterable<User> listUser = userService.getUsers();
-		// Integer userId = ((User) loggedUser).getId();
-		// User user = userService.getUser(userId);
-		model.addAttribute("users", listUser);
-		logger.info("Home.");
 		return "home";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginPage(Model model) {
-		logger.info("Page login.");
-
 		return "login";
 	}
 
+	/*
+	 * Page d'accueil nouvel utilisateur
+	 */
+
 	@RequestMapping(value = { "/register" }, method = RequestMethod.GET)
 	public String register(Model model) {
+
+		// Création d'un nouveau user
+		User user = new User();
+		model.addAttribute("user", user);
+
+		// Création d'un nouveau account
+		Account account = new Account();
+		model.addAttribute("account", account);
+
+		// Création d'un nouveau bankAccount
+		BankAccount bankAccount = new BankAccount();
+		model.addAttribute("bankAccount", bankAccount);
 
 		return "register";
 	}
 
 	/*
-	 * New user
+	 * Enregistrement d'un nouvel utilisateur et création de ses compte et compte
+	 * bancaire
 	 */
-
-	@GetMapping("/registerNewUser")
-	public String createUser(Model model) {
-		User user = new User();
-		model.addAttribute("user", user);
-		
-		return "registerNewUser";
-	}
-
 	@PostMapping("/registerUser")
-	public ModelAndView saveUser(
-			@ModelAttribute ("user") User user,
-			@ModelAttribute ("iban") String iban) {
-		
-		// Cryptage du password
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(user.getPassword());
-		user.setPassword(hashedPassword);
+	public ModelAndView saveUser(@ModelAttribute("user") User user,
+			@ModelAttribute("bankAccount") BankAccount bankAccount, 
+			@ModelAttribute("account") Account account,
+			@ModelAttribute("iban") String iban) {
 
-		userService.saveUser(user);
-		
-		// Création du bankAccount
-		BankAccount bankAccount = new BankAccount();
-		bankAccount.setUserId(user.getId());
-		bankAccount.setIban(iban);
-		
-		bankAccountService.saveBankAccount(bankAccount);
-		//accountService.saveAccount(account);
-		return new ModelAndView("redirect:/");
+		try {
+			// Cryptage du password
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String hashedPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(hashedPassword);
+
+			// Récupération du userId pour compte et compte bancaire
+			int newUserId = 0;
+			User lastUser = userService.getLastUser();
+			if (lastUser != null) {
+				newUserId = lastUser.getId() + 1;
+			} else {
+				newUserId = 1;
+			}
+			account.setUserId(newUserId);
+			bankAccount.setUserId(newUserId);
+
+			// Récupération de l'iban saisi
+			bankAccount.setIban(iban);
+
+			userService.saveUser(user);
+			bankAccountService.saveBankAccount(bankAccount);
+			accountService.saveAccount(account);
+			return new ModelAndView("redirect:/");
+		} catch (Exception e) {
+			logger.error("Unable to register user and/or create accounts", e);
+		}
+		return new ModelAndView("redirect:/register");
 	}
-
 
 }

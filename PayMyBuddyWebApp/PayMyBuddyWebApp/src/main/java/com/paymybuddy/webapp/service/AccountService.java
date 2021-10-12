@@ -26,7 +26,6 @@ public class AccountService {
 		Account savedAccount;
 		
 		if(Account.getId() == 0) {
-			// If id is null, then it is a new Account.
 			savedAccount = accountProxy.createAccount(Account);
 		} else {
 			savedAccount = accountProxy.updateAccount(Account);

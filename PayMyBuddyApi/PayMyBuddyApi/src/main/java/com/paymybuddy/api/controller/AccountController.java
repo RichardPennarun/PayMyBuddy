@@ -3,8 +3,9 @@ package com.paymybuddy.api.controller;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +19,12 @@ import com.paymybuddy.api.service.AccountService;
 @RestController
 public class AccountController {
 
+	private static final Logger logger = LogManager.getLogger("UserController");
+
 	@Autowired
 	AccountService accountService;
 
-	// - Get one account
+	// Get one account
 	@GetMapping("/account/{id}")
 	public Account getAccount(@PathVariable("id") final Integer id) {
 		Optional<Account> account = accountService.getAccount(id);
@@ -46,10 +49,9 @@ public class AccountController {
 		return accountService.saveAccount(account);
 	}
 
-	// Update an existing account
+	// Update an existing account (retrait ou dépot d'argent sur le compte)
 	@PutMapping("/account/{id}")
-	public Account updateAccount(@PathVariable("id") final Integer id, 
-			@RequestBody Account account) {
+	public Account updateAccount(@PathVariable("id") final Integer id, @RequestBody Account account) {
 		Optional<Account> a = accountService.getAccount(id);
 		if (a.isPresent()) {
 			Account currentAccount = a.get();

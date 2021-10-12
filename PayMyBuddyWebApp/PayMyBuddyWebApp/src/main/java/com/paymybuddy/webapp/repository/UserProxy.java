@@ -21,133 +21,76 @@ import com.paymybuddy.webapp.model.User;
 @Repository
 public class UserProxy {
 
-    private static final Logger logger = LogManager.getLogger("UserProxy");
-    
+	private static final Logger logger = LogManager.getLogger("UserProxy");
+
 	@Autowired
 	private CustomProperties props;
 
-	/**
-	 * Get user by usrname
-	 * 
-	 * @param username
-	 * @return The user which matches the id
-	 */
-	/*
-	 * public User findByUsernameOrEmail(String usernameOrEmail) { String baseApiUrl
-	 * = props.getApiUrl(); String getUserUrl = baseApiUrl + "/user/" +
-	 * usernameOrEmail;
-	 * 
-	 * RestTemplate restTemplate = new RestTemplate(); ResponseEntity<User> response
-	 * = restTemplate .exchange(getUserUrl, HttpMethod.GET, null, User.class);
-	 * 
-	 * // log.debug("Get User call " + response.getStatusCode().toString());
-	 * 
-	 * logger.info("UserProxy ok."); return response.getBody(); }
-	 */
-	
-
+	// Get a user by its email (authentication)
 	public User findByEmail(String email) {
 		String baseApiUrl = props.getApiUrl();
 		String getUserUrl = baseApiUrl + "/user/" + email;
-
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<User> response = restTemplate
-				.exchange(getUserUrl, HttpMethod.GET, null, User.class);
-
-		// log.debug("Get User call " + response.getStatusCode().toString());
-
-        logger.info("UserProxy ok.");
+		ResponseEntity<User> response = restTemplate.exchange(getUserUrl, HttpMethod.GET, null, User.class);
+		logger.info("User found by its email.");
 		return response.getBody();
 	}
 
-	/**
-	 * Get user by ID
-	 * 
-	 * @param id The id of the user
-	 * @return The user which matches the id
-	 */
+	// Get the last user registered)
+	public User getLastUser() {
+		String baseApiUrl = props.getApiUrl();
+		String getUserUrl = baseApiUrl + "/lastUser";
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<User> response = restTemplate.exchange(getUserUrl, HttpMethod.GET, null, User.class);
+		return response.getBody();
+	}
 
+	// Get user by ID
 	public User getUser(int id) {
 		String baseApiUrl = props.getApiUrl();
 		String getUserUrl = baseApiUrl + "/user/id/" + id;
-
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<User> response = restTemplate.exchange(getUserUrl, HttpMethod.GET, null, User.class);
-
-		// log.debug("Get User call " + response.getStatusCode().toString());
-
 		return response.getBody();
 	}
 
-	/**
-	 * GET ALL users
-	 * 
-	 * @return An iterable of all users
-	 */
-
+	// GET ALL users
 	public ArrayList<User> getUsers() {
 		String baseApiUrl = props.getApiUrl();
 		String getUsersUrl = baseApiUrl + "/users";
-
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<ArrayList<User>> response = restTemplate.exchange(getUsersUrl, HttpMethod.GET, null,
 				new ParameterizedTypeReference<ArrayList<User>>() {
 				});
-
 		return response.getBody();
 	}
 
-	/**
-	 * CREATE a new user
-	 * 
-	 * @param e A new user (without an id)
-	 * @return The user full filled (with an id)
-	 */
+	// CREATE a new user
 	public User createUser(User e) {
 		String baseApiUrl = props.getApiUrl();
 		String createUserUrl = baseApiUrl + "/user";
-
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<User> request = new HttpEntity<User>(e);
 		ResponseEntity<User> response = restTemplate.exchange(createUserUrl, HttpMethod.POST, request, User.class);
-
-		// log.debug("Create User call " + response.getStatusCode().toString());
-
 		return response.getBody();
 	}
 
-	/**
-	 * UPDATE an user - using the PUT HTTP Method.
-	 * 
-	 * @param e Existing user to update
-	 */
+	// UPDATE a user 
 	public User updateUser(User e) {
 		String baseApiUrl = props.getApiUrl();
 		String updateUserUrl = baseApiUrl + "/user/" + e.getId();
-
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<User> request = new HttpEntity<User>(e);
 		ResponseEntity<User> response = restTemplate.exchange(updateUserUrl, HttpMethod.PUT, request, User.class);
-
-		// log.debug("Update User call " + response.getStatusCode().toString());
-
 		return response.getBody();
 	}
 
-	/**
-	 * DELETE an user using exchange method of RestTemplate instead of delete method
-	 * in order to log the response status code.
-	 * 
-	 * @param e The user to delete
-	 */
+	//DELETE a user
 	public void deleteUser(int id) {
 		String baseApiUrl = props.getApiUrl();
 		String deleteUserUrl = baseApiUrl + "/user/" + id;
-
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Void> response = restTemplate.exchange(deleteUserUrl, HttpMethod.DELETE, null, Void.class);
-
-		// log.debug("Delete User call " + response.getStatusCode().toString());
 	}
 
 }

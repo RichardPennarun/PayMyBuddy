@@ -1,6 +1,5 @@
 package com.paymybuddy.webapp.controller;
 
-
 import java.sql.Timestamp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,65 +35,77 @@ public class TransferController {
 
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-	
-	
 
+	/*
+	 * Page Transfer
+	 */
 	@GetMapping("/transfer")
 	public String transfer(Model model) {
 
+		// Récupère le CurrentlyLoggedInUser
 		Integer userId = customUserDetailsService.getCurrentlyLoggedInUserId();
 		User user = userService.getUser(userId);
-		model.addAttribute("user", user);
 
+		// Affiche la liste de ses transactions
 		Iterable<Transaction> listTransaction = user.getTransactions();
 		model.addAttribute("transactions", listTransaction);
 
+		// Récupère son compte pour afficher son solde
 		Account account = user.getAccount();
 		model.addAttribute("accounts", account);
 
+		// Affiche la liste de ses connections pour effectuer un paiement
 		Iterable<Connection> listConnection = user.getConnections();
 		model.addAttribute("connections", listConnection);
 
-		
-		
+		// Création d'une nouvelle transaction dont on récupère
+		// les éléments par formulaire
 		Transaction transaction = new Transaction();
 		model.addAttribute("transaction", transaction);
+
 		return "transfer";
 	}
 
+	/*
+	 * Enregistrement de la nouvelle transaction et des nouveaux soldes
+	 * émetteur/bénéficiaire
+	 */
 	@PostMapping("/saveTransaction")
-	public ModelAndView saveTransaction(
-			@ModelAttribute("transaction") Transaction transaction) {
+	public ModelAndView saveTransaction(@ModelAttribute("transaction") Transaction transaction) {
 
-		// Ajout de l'émetteur de la transaction
-		Integer userId = customUserDetailsService.getCurrentlyLoggedInUserId();
-		User user = userService.getUser(userId);
-		transaction.setTransmitterId(user.getId());
-		
-		// Horodatage de la transaction
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		transaction.setTransactionDate(timestamp);
-		
-		// Récupération du username du bénéficiaire
-		User beneficiary = userService.getUser(transaction.getBeneficiaryId());
-		transaction.setBeneficiaryUsername(beneficiary.getUsername());
-		
-		// Calcul nouveau solde bénéficiaire
-		Account beneficiaryAccount = beneficiary.getAccount();
-		double beneficiaryBalance = 
-				(beneficiaryAccount.getBalance()) + (transaction.getAmount());
-		beneficiaryAccount.setBalance(beneficiaryBalance);
+		try {
+			// Ajout de l'émetteur de la transaction
+			Integer userId = customUserDetailsService.getCurrentlyLoggedInUserId();
+			User user = userService.getUser(userId);
+			transaction.setTransmitterId(user.getId());
 
-		// Calcul nouveau solde émetteur
-		Account transmitterAccount = user.getAccount();
-		double transmitterBalance = 
-			(transmitterAccount.getBalance()) - (transaction.getAmount()) 
-			- (((transaction.getAmount()) * 5) * 0.01);
-		transmitterAccount.setBalance(transmitterBalance);
+			// Horodatage de la transaction
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			transaction.setTransactionDate(timestamp);
 
-		accountService.saveAccount(transmitterAccount);
-		accountService.saveAccount(beneficiaryAccount);
-		transactionService.saveTransaction(transaction);
+			// Récupération du username du bénéficiaire
+			User beneficiary = userService.getUser(transaction.getBeneficiaryId());
+			transaction.setBeneficiaryUsername(beneficiary.getUsername());
+
+			// Calcul nouveau solde du bénéficiaire
+			Account beneficiaryAccount = beneficiary.getAccount();
+			double beneficiaryBalance = (beneficiaryAccount.getBalance()) + (transaction.getAmount());
+			beneficiaryAccount.setBalance(beneficiaryBalance);
+
+			// Calcul nouveau solde de l'émetteur (-5% pour l'app)
+			Account transmitterAccount = user.getAccount();
+			double transmitterBalance = (transmitterAccount.getBalance()) - (transaction.getAmount())
+					- (((transaction.getAmount()) * 5) * 0.01);
+			transmitterAccount.setBalance(transmitterBalance);
+
+			accountService.saveAccount(transmitterAccount);
+			accountService.saveAccount(beneficiaryAccount);
+			transactionService.saveTransaction(transaction);
+			return new ModelAndView("redirect:/transfer");
+		
+		} catch (Exception e) {
+			logger.error("Unable to save transaction", e);
+		}
 		return new ModelAndView("redirect:/transfer");
 	}
 

@@ -1,6 +1,5 @@
 package com.paymybuddy.webapp.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -8,9 +7,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 @Component
-public class User  implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class User {
 
 	private int id;
 
@@ -145,7 +142,5 @@ public class User  implements Serializable {
 				&& Objects.equals(transactions, other.transactions) && Objects.equals(username, other.username)
 				&& Objects.equals(bankAccount, other.bankAccount);
 	}
-
-	
 
 }

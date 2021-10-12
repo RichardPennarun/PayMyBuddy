@@ -5,15 +5,15 @@ import java.util.Objects;
 public class Account {
 
 	private int id;
-	
-	private Integer userId;
-	
+
+	private int userId;
+
 	private double balance;
-	
+
 	public Account() {
-		
+
 	}
-	
+
 	public Account(int id, Integer userId, Float balance) {
 		super();
 		this.id = id;
@@ -24,23 +24,23 @@ public class Account {
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public Integer getUserId() {
+
+	public int getUserId() {
 		return userId;
 	}
-	
-	public void setUserId(Integer userId) {
+
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	
+
 	public double getBalance() {
 		return balance;
 	}
-	
+
 	public void setBalance(double transmitterBalance) {
 		this.balance = transmitterBalance;
 	}
@@ -67,7 +67,5 @@ public class Account {
 	public String toString() {
 		return "Account [id=" + id + ", userId=" + userId + ", balance=" + balance + "]";
 	}
-	
-	
 
 }

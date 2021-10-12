@@ -3,6 +3,8 @@ package com.paymybuddy.api.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,11 @@ import com.paymybuddy.api.repository.BankAccountRepository;
 @Service
 public class BankAccountService {
 
+	private static final Logger logger = LogManager.getLogger("UserController");
+
 	@Autowired
 	private BankAccountRepository bankAccountRepository;
 
-	// Get all bankAccounts
 	public ArrayList<BankAccount> getBankAccounts() {
 		ArrayList<BankAccount> bankAccounts = (ArrayList<BankAccount>) bankAccountRepository.findAll();
 

@@ -20,15 +20,10 @@ public class BankAccountService {
 		return bankAccountProxy.getBankAccounts();
 	}
 	
-	public void deleteBankAccount(final int id) {
-		bankAccountProxy.deleteBankAccount(id);
-	}
-	
 	public BankAccount saveBankAccount(BankAccount BankAccount) {
 		BankAccount savedBankAccount;
 		
 		if (BankAccount.getId() == 0) {
-			// If id is null, then it is a new bankAccount.
 			savedBankAccount = bankAccountProxy.createBankAccount(BankAccount);
 		} else {
 			savedBankAccount = bankAccountProxy.updateBankAccount(BankAccount);

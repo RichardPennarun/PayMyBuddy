@@ -5,14 +5,14 @@ import java.util.Objects;
 public class BankAccount {
 
 	private int id;
-	
-	private Integer userId;
-	
+
+	private int userId;
+
 	private String iban;
 
 	public BankAccount() {
 	}
-	
+
 	public BankAccount(int id, Integer userId, String iban) {
 		super();
 		this.id = id;
@@ -28,11 +28,11 @@ public class BankAccount {
 		this.id = id;
 	}
 
-	public Integer getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
@@ -65,6 +65,5 @@ public class BankAccount {
 	public String toString() {
 		return "BankAccount [id=" + id + ", userId=" + userId + ", iban=" + iban + "]";
 	}
-	
-	
+
 }

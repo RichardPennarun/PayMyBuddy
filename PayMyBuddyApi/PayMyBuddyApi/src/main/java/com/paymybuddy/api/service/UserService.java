@@ -11,7 +11,6 @@ import com.paymybuddy.api.model.User;
 
 
 public interface UserService {
-	
 
 	ArrayList<User> getUsers();
 	
@@ -19,9 +18,9 @@ public interface UserService {
 	
 	User saveUser(User user);
 	
-	void deleteUser(final Integer id);
-
-	//User findByUsernameOrEmail(final String usernameOrEmail);
-	
+	// Pour authentification
 	User findByEmail(String email) ;
+	
+	// Pour création compte et compte bancaire
+	User findFirstByOrderByIdDesc();
 }

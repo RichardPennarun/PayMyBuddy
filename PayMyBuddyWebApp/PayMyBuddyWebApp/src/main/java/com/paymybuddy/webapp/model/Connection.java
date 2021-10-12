@@ -1,21 +1,18 @@
 package com.paymybuddy.webapp.model;
 
-import java.util.Objects;
-
-
 public class Connection {
 
 	private int id;
-	
+
 	private int userId;
-	
+
 	private int connectionId;
-	
+
 	private String connectionEmail;
-	
+
 	private String connectionUsername;
-	
-	public Connection( ) {
+
+	public Connection() {
 	}
 
 	public int getId() {

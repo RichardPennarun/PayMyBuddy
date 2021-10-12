@@ -3,8 +3,9 @@ package com.paymybuddy.api.controller;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +19,12 @@ import com.paymybuddy.api.service.BankAccountService;
 @RestController
 public class BankAccountController {
 
+	private static final Logger logger = LogManager.getLogger("UserController");
+
 	@Autowired
 	BankAccountService bankAccountService;
 
-	// - Get one bankAccount
-
+	// Get one bankAccount
 	@GetMapping("/bankAccount/{id}")
 	public BankAccount getBankAccount(@PathVariable("id") final Integer id) {
 		Optional<BankAccount> bankAccount = bankAccountService.getBankAccount(id);
@@ -47,10 +49,9 @@ public class BankAccountController {
 		return bankAccountService.saveBankAccount(bankAccount);
 	}
 
-	// Update an existing bankAccount
+	// Update an existing bankAccount (changement iban)
 	@PutMapping("/bankAccount/{id}")
-	public BankAccount updateBankAccount(@PathVariable("id") final Integer id, 
-			@RequestBody BankAccount bankAccount) {
+	public BankAccount updateBankAccount(@PathVariable("id") final Integer id, @RequestBody BankAccount bankAccount) {
 		Optional<BankAccount> b = bankAccountService.getBankAccount(id);
 		if (b.isPresent()) {
 			BankAccount currentBankAccount = b.get();

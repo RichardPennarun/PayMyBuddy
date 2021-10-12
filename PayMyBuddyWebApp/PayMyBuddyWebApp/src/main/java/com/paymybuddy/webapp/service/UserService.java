@@ -19,12 +19,10 @@ public class UserService {
     @Autowired
     private UserProxy userProxy;
 
-	/*
-	 * @Override public User findByUsernameOrEmail(String usernameOrEmail) { User
-	 * user = null; try { user = userProxy.findByUsernameOrEmail(usernameOrEmail); }
-	 * catch (Exception e) { throw e; } logger.info("UserServiceImpl ok."); return
-	 * user; }
-	 */
+    
+    public User getLastUser() {
+    	return userProxy.getLastUser();
+    }
 	
     public ArrayList<User> getUsers() {
         return userProxy.getUsers();
@@ -40,12 +38,8 @@ public class UserService {
 	
 	public User saveUser(User User) {
 		User savedUser;
-		
-		// Functional rule : Last name must be capitalized.
-		//User.setLastName(User.getLastName());
 
 		if(User.getId() == 0) {
-			// If id is null, then it is a new User.
 			savedUser = userProxy.createUser(User);
 		} else {
 			savedUser = userProxy.updateUser(User);
